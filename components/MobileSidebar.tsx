@@ -24,10 +24,10 @@ const MobileSidebar = () => {
       <SidebarComponent
         width="270"
         ref={(Sidebar) => (sidebar = Sidebar)}
-        created={() => { sidebar.hide(); }}
+        created={() => sidebar.hide()}
         closeOnDocumentClick={true}
         showBackdrop={true}
-        type="Over"
+        type="over"
       >
         <NavItems handleClick={toggleSidebar} />
       </SidebarComponent>

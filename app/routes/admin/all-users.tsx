@@ -1,8 +1,13 @@
-import React from 'react'
+import { Header } from 'components'
 
 const AllUsers = () => {
   return (
-    <div>Users Table</div>
+    <main className="dashboard wrapper">
+      <Header title="Users Page" description="Check out our users in real time." onButtonClick={() => console.log("Header clicked")} />
+      
+
+      All users Page content goes here.
+    </main>
   )
 }
 
