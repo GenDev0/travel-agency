@@ -6,6 +6,24 @@ export const user = {
   imageUrl: "/assets/images/david.webp",
 };
 
+export const dashboardStats = {
+  totalUsers: 12450,
+  usersJoined: {
+    currentMonth: 218,
+    lastMonth: 176,
+  },
+  totalTrips: 3210,
+  tripsCreated: {
+    currentMonth: 150,
+    lastMonth: 250,
+  },
+  userRole : {
+    total: 62,
+    currentMonth: 25,
+    lastMonth: 15,
+  }
+}
+
 export const sidebarItems = [
   {
     id: 1,
@@ -108,7 +126,7 @@ export const comboBoxItems = {
 } as Record<keyof TripFormData, string[]>;
 
 export const userXAxis: AxisModel = { valueType: "Category", title: "Day" };
-export const useryAxis: AxisModel = {
+export const userYAxis: AxisModel = {
   minimum: 0,
   maximum: 10,
   interval: 2,
@@ -121,7 +139,7 @@ export const tripXAxis: AxisModel = {
   majorGridLines: { width: 0 },
 };
 
-export const tripyAxis: AxisModel = {
+export const tripYAxis: AxisModel = {
   minimum: 0,
   maximum: 10,
   interval: 2,

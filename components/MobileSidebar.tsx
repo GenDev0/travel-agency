@@ -1,19 +1,22 @@
 // @ts-nocheck
-import { SidebarComponent } from "@syncfusion/ej2-react-navigations"
-import { Link } from "react-router"
+import { SidebarComponent } from "@syncfusion/ej2-react-navigations";
+import { Link } from "react-router";
 import NavItems from "./NavItems";
 
 const MobileSidebar = () => {
   let sidebar: SidebarComponent;
   const toggleSidebar = () => {
-      sidebar.toggle();
-  }
+    sidebar.toggle();
+  };
   return (
     <div className="mobile-sidebar wrapper">
       <header>
-
         <Link to="/" className="link-logo">
-          <img className="size-[30px]" src="/assets/icons/logo.svg" alt="logo" />
+          <img
+            className="size-[30px]"
+            src="/assets/icons/logo.svg"
+            alt="logo"
+          />
           <h1>Tourismo</h1>
         </Link>
 
@@ -32,7 +35,7 @@ const MobileSidebar = () => {
         <NavItems handleClick={toggleSidebar} />
       </SidebarComponent>
     </div>
-  )
-}
+  );
+};
 
-export default MobileSidebar
+export default MobileSidebar;
