@@ -24,6 +24,44 @@ export const dashboardStats = {
   }
 }
 
+export   const allTrips = [{
+      id: 1,
+      name: "Tropical Rewind",
+      imageUrls: ["/assets/images/sample1.jpg"],
+      itinerary: [{ location: "Thailand" }],
+      tags: ["Adventure", "Culture"],
+      travelStyle: "Solo",
+      estimatedPrice: "$1,000",
+    },
+    {
+      id: 2,
+      name: "French Reverie",
+      imageUrls: ["/assets/images/sample2.jpg"],
+      itinerary: [{ location: "Paris" }],
+      tags: ["Relaxation", "Culinary"],
+      travelStyle: "Family",
+      estimatedPrice: "$2,000",
+    },
+    {
+      id: 3,
+      name: "Zen Break",
+      imageUrls: ["/assets/images/sample3.jpg"],
+      itinerary: [{ location: "Japan" }],
+      tags: ["Shopping", "Luxury"],
+      travelStyle: "Couple",
+      estimatedPrice: "$3,000",
+    },
+    {
+      id: 4,
+      name: "Adventure in Westeros",
+      imageUrls: ["/assets/images/sample4.jpg"],
+      itinerary: [{ location: "Croatia" }],
+      tags: ["Historical", "Culture"],
+      travelStyle: "Friends",
+      estimatedPrice: "$4,000",
+    },
+    ];
+
 export const sidebarItems = [
   {
     id: 1,
