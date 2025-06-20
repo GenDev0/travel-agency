@@ -39,8 +39,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {/* TODO: remove mt after SYNCFUSION LICENSE acquisition */}
-        <div className="mt-24" />
         {children}
         <ScrollRestoration />
         <Scripts />
