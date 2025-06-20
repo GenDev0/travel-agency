@@ -1,10 +1,5 @@
 import type { AxisModel } from "@syncfusion/ej2-react-charts";
-
-export const user = {
-  name: "Ahmed Chebbi",
-  email: "ahmed@chebbi.com",
-  imageUrl: "/assets/images/david.webp",
-};
+import { formatDate } from "lib/utils";
 
 export const dashboardStats = {
   totalUsers: 12450,
