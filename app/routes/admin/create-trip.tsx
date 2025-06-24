@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import { world_map } from "~/constants/world_map";
 import { ButtonComponent } from "@syncfusion/ej2-react-buttons";
 import { account } from "~/appwrite/client";
+import { redirect, useNavigate } from "react-router";
 
 export const loader = async () => {
   try {
@@ -37,10 +38,11 @@ export const loader = async () => {
 
 const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
   const countries = loaderData as Country[];
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<TripFormData>({
     country: countries[0]?.name || "",
     travelStyle: "",
-    interest: "",
+    interests: "",
     budget: "0",
     duration: 0,
     groupType: "",
@@ -67,10 +69,11 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
     setError(null);
 
     try {
+      console.log("🚀 ~ handleSubmit ~ formData:", formData);
       if (
         !formData.country ||
         !formData.travelStyle ||
-        !formData.interest ||
+        !formData.interests ||
         !formData.groupType ||
         !formData.budget
       ) {
@@ -98,6 +101,35 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
       console.log("🚀 ~ handleSubmit ~ form:", formData);
 
       try {
+        const response = await fetch("/api/create-trip", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            country: formData.country,
+            numberOfDays: formData.duration,
+            travelStyle: formData.travelStyle,
+            interests: formData.interests,
+            budget: formData.budget,
+            groupType: formData.groupType,
+            userId: user.$id,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to create trip");
+        }
+
+        const result: CreateTripResponse = await response.json();
+        console.log("Trip created successfully:", result);
+        if (result?.id) {
+          // Navigate to the trip details page
+          console.log("Trip ID:", result.id);
+          navigate(`/trips/${result.id}`);
+        } else {
+          setError("Trip creation failed. Please try again.");
+        }
       } catch (error) {
         console.log("Error generating trip:", error);
         setError("Failed to generate the trip");

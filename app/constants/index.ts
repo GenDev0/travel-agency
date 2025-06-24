@@ -147,14 +147,14 @@ export const footers = ["Terms & Condition", "Privacy Policy"];
 export const selectItems = [
   "groupType",
   "travelStyle",
-  "interest",
+  "interests",
   "budget",
 ] as (keyof TripFormData)[];
 
 export const comboBoxItems = {
   groupType: groupTypes,
   travelStyle: travelStyles,
-  interest: interests,
+  interests: interests,
   budget: budgetOptions,
 } as Record<keyof TripFormData, string[]>;
 

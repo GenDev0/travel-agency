@@ -140,7 +140,7 @@ declare interface UsersItineraryCount {
 declare interface TripsInterest {
   imageUrl: string;
   name: string;
-  interest: string;
+  interests: string;
 }
 
 declare interface InfoPillProps {
@@ -151,7 +151,7 @@ declare interface InfoPillProps {
 declare interface TripFormData {
   country: string;
   travelStyle: string;
-  interest: string;
+  interests: string;
   budget: string;
   duration: number;
   groupType: string;
