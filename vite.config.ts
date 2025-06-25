@@ -3,6 +3,7 @@ import { sentryReactRouter, type SentryReactRouterBuildOptions } from "@sentry/r
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import devtoolsJson from 'vite-plugin-devtools-json';
 
 const sentryConfig: SentryReactRouterBuildOptions = {
   org: "genydev",
@@ -23,7 +24,7 @@ const sentryConfig: SentryReactRouterBuildOptions = {
 
 export default defineConfig(config => {
   return {
-  plugins: [tailwindcss(), tsconfigPaths(), reactRouter(),sentryReactRouter(sentryConfig, config)],
+  plugins: [tailwindcss(), tsconfigPaths(), reactRouter(),sentryReactRouter(sentryConfig, config), devtoolsJson()],
   sentryConfig,
   ssr: {
     noExternal: [
