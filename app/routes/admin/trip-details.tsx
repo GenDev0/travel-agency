@@ -2,7 +2,7 @@ import { getAllTrips, getTripById } from "~/appwrite/trips";
 import type { Route } from "./+types/trip-details";
 import { redirect, useNavigate, type LoaderFunctionArgs } from "react-router";
 import { cn, getFirstWord, parseTripData } from "lib/utils";
-import { Header, InfoPill } from "components";
+import { Header, InfoPill, TripCard } from "components";
 import {
   ChipDirective,
   ChipListComponent,
@@ -16,16 +16,31 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     if (!tripId) {
       throw new Error("Trip ID is required");
     }
-    const trip = await getTripById(tripId);
+
+    // Run both promises in parallel
+    const [trip, trips] = await Promise.all([
+      getTripById(tripId),
+      getAllTrips(4, 0),
+    ]);
+
     if (!trip) {
       throw new Error("Trip not found");
     }
-    const trips = await getAllTrips(4, 0);
 
-    return { trip, allTrips: trips };
+    const popularTrips =
+      trips?.allTrips
+        .map((trip) => {
+          const parsedTrip = parseTripData(trip?.tripDetail);
+          return parsedTrip
+            ? { ...parsedTrip, id: trip?.$id, imageUrls: trip?.imageUrls }
+            : null;
+        })
+        .filter((trip): trip is NonNullable<typeof trip> => trip !== null) ||
+      [];
+
+    return { trip, popularTrips };
   } catch (error) {
-    console.log("Error in clientLoader:", error);
-    // Handle error appropriately, e.g., return an empty object or a default value
+    console.error("Error in loader:", error);
     return redirect("/trips");
   }
 };
@@ -36,10 +51,9 @@ export const HydrateFallback = () => {
 
 const TripDetails = ({ loaderData }: Route.ComponentProps) => {
   const navigate = useNavigate();
-  const { trip, allTrips } = loaderData;
+  const { trip, popularTrips } = loaderData;
   const tripDetails = parseTripData(trip?.tripDetail);
-  const popularTrips =
-    allTrips?.allTrips.map((trip) => parseTripData(trip?.tripDetail)) || [];
+
   if (!tripDetails) {
     navigate("/trips");
     return null; // or a loading state
@@ -59,7 +73,7 @@ const TripDetails = ({ loaderData }: Route.ComponentProps) => {
     travelStyle,
     weatherInfo,
   } = tripDetails;
-  console.log("🚀 ~ TripDetails ~ tripDetails:", tripDetails);
+
   const pillItems = [
     { text: travelStyle, bg: "!bg-pink-50 !text-pink-500" },
     { text: groupType, bg: "!bg-primary-50 !text-primary-500" },
@@ -71,27 +85,21 @@ const TripDetails = ({ loaderData }: Route.ComponentProps) => {
     { title: "Weather", items: weatherInfo },
   ];
 
-  console.log(
-    "🚀 ~ TripDetails ~ visitTimeAndWeatherInfo:",
-    visitTimeAndWeatherInfo
-  );
-
   return (
-    <main className="travel-detail wrapper">
+    <main className='travel-detail wrapper'>
       <Header
-        title="Trip Details"
-        description="View and edit AI-generated travel plans."
-        onButtonClick={() => console.log("Header clicked")}
+        title='Trip Details'
+        description='View and edit AI-generated travel plans.'
       />
-      <section className="container wrapper-md">
+      <section className='container wrapper-md'>
         <header>
-          <h1 className="p-40-semibold text-dark-100">{name}</h1>
-          <div className="flex flex-wrap items-center gap-5">
+          <h1 className='p-40-semibold text-dark-100'>{name}</h1>
+          <div className='flex flex-wrap items-center gap-5'>
             <InfoPill
               text={`${duration > 1 ? duration : "1"} day${
                 duration > 1 ? "s" : ""
               } plan`}
-              image="/assets/icons/calendar.svg"
+              image='/assets/icons/calendar.svg'
             />
             <InfoPill
               text={
@@ -100,11 +108,11 @@ const TripDetails = ({ loaderData }: Route.ComponentProps) => {
                   .map((item) => `${item.location}`)
                   .join(", ") || ""
               }
-              image="/assets/icons/location-mark.svg"
+              image='/assets/icons/location-mark.svg'
             />
           </div>
         </header>
-        <section className="gallery">
+        <section className='gallery'>
           {trip?.imageUrls &&
             trip.imageUrls.map((url: string, index: number) => (
               <img
@@ -120,8 +128,8 @@ const TripDetails = ({ loaderData }: Route.ComponentProps) => {
               />
             ))}
         </section>
-        <section className="flex gap-3 md:gap-5 items-center flex-wrap">
-          <ChipListComponent id="travel-chip">
+        <section className='flex gap-3 md:gap-5 items-center flex-wrap'>
+          <ChipListComponent id='travel-chip'>
             <ChipsDirective>
               {pillItems.map((pill, index) => (
                 <ChipDirective
@@ -132,15 +140,15 @@ const TripDetails = ({ loaderData }: Route.ComponentProps) => {
               ))}
             </ChipsDirective>
           </ChipListComponent>
-          <ul className="flex gap-1 items-center">
+          <ul className='flex gap-1 items-center'>
             {Array(5)
               .fill(null)
               .map((_, index) => (
                 <li key={index}>
                   <img
-                    src="/assets/icons/star.svg"
-                    alt="Rating Star"
-                    className="size-[18px]"
+                    src='/assets/icons/star.svg'
+                    alt='Rating Star'
+                    className='size-[18px]'
                   />
                 </li>
               ))}
@@ -149,14 +157,14 @@ const TripDetails = ({ loaderData }: Route.ComponentProps) => {
                 <ChipsDirective>
                   <ChipDirective
                     text={"4.9/5"}
-                    cssClass="!bg-yellow-50 !text-yellow-700"
+                    cssClass='!bg-yellow-50 !text-yellow-700'
                   />
                 </ChipsDirective>
               </ChipListComponent>
             </li>
           </ul>
         </section>
-        <section className="title">
+        <section className='title'>
           <article>
             <h3>
               {duration > 1 ? `${duration} Days` : "1 Day"} {country}{" "}
@@ -168,10 +176,10 @@ const TripDetails = ({ loaderData }: Route.ComponentProps) => {
           </article>
           <h2>{estimatedPrice}</h2>
         </section>
-        <p className="text-sm md:text-lg font-normal text-dark-400">
+        <p className='text-sm md:text-lg font-normal text-dark-400'>
           {description}
         </p>
-        <ul className="itinerary">
+        <ul className='itinerary'>
           {itinerary.map((dayPlan: DayPlan, index) => (
             <li key={index}>
               <h3>
@@ -180,10 +188,10 @@ const TripDetails = ({ loaderData }: Route.ComponentProps) => {
               <ul>
                 {dayPlan.activities.map((activity, index) => (
                   <li key={index}>
-                    <span className="flex-shrink-0 p-16-semibold text-dark-400">
+                    <span className='flex-shrink-0 p-16-semibold text-dark-400'>
                       {activity.time}
                     </span>
-                    <p className="flex-grow">{activity.description}</p>
+                    <p className='flex-grow'>{activity.description}</p>
                   </li>
                 ))}
               </ul>
@@ -191,28 +199,44 @@ const TripDetails = ({ loaderData }: Route.ComponentProps) => {
           ))}
         </ul>
         {visitTimeAndWeatherInfo.map((info) => (
-          <section key={info.title} className="visit-time-weather">
-            <h3 className="p-40-semibold text-dark-100 mb-4">{info?.title}</h3>
-            <ul className="flex flex-wrap gap-2">
+          <section key={info.title} className='visit-time-weather'>
+            <h3 className='p-40-semibold text-dark-100 mb-4'>{info?.title}</h3>
+            <ul className='flex flex-wrap gap-2'>
               {info?.items.map((item) => (
-                <li key={item} className="flex items-center gap-2">
-                  <p className="flex-grow">{item}</p>
+                <li key={item} className='flex items-center gap-2'>
+                  <p className='flex-grow'>{item}</p>
                 </li>
               ))}
             </ul>
           </section>
         ))}
-        <section className="flex flex-col gap-6">
-          <h2 className="p-24-semibold text-dark-100">Popular Trips</h2>
-          {allTrips.total > 0 ? (
-            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {popularTrips.map((trip) => (
-                <li key={trip?.id} className="border p-4 rounded">
-                  <h3 className="font-semibold">{trip?.name}</h3>
-                  <p>{trip?.description}</p>
-                </li>
-              ))}
-            </ul>
+        <section className='flex flex-col gap-6'>
+          <h2 className='p-24-semibold text-dark-100'>Popular Trips</h2>
+          {popularTrips.length > 0 ? (
+            <div className='trip-grid'>
+              {popularTrips.map(
+                ({
+                  id,
+                  imageUrls,
+                  itinerary,
+                  name,
+                  estimatedPrice,
+                  interests,
+                  travelStyle,
+                }) =>
+                  id && (
+                    <TripCard
+                      key={id}
+                      id={id}
+                      imageUrl={imageUrls?.[0] || ""}
+                      location={itinerary?.[0]?.location || ""}
+                      name={name || ""}
+                      price={estimatedPrice || ""}
+                      tags={[interests, travelStyle]}
+                    />
+                  )
+              )}
+            </div>
           ) : (
             <p>No popular trips available.</p>
           )}
