@@ -9,28 +9,28 @@ const MobileSidebar = () => {
     sidebar.toggle();
   };
   return (
-    <div className="mobile-sidebar wrapper">
+    <div className='mobile-sidebar wrapper'>
       <header>
-        <Link to="/" className="link-logo">
+        <Link to='/' className='link-logo'>
           <img
-            className="size-[30px]"
-            src="/assets/icons/logo.svg"
-            alt="logo"
+            className='size-[30px]'
+            src='/assets/icons/logo.svg'
+            alt='logo'
           />
           <h1>Tourismo</h1>
         </Link>
 
         <button onClick={toggleSidebar}>
-          <img src="/assets/icons/menu.svg" alt="Menu" className="size-7" />
+          <img src='/assets/icons/menu.svg' alt='Menu' className='size-7' />
         </button>
       </header>
       <SidebarComponent
-        width="270"
+        width='270'
         ref={(Sidebar) => (sidebar = Sidebar)}
         created={() => sidebar.hide()}
         closeOnDocumentClick={true}
         showBackdrop={true}
-        type="over"
+        type='over'
       >
         <NavItems handleClick={toggleSidebar} />
       </SidebarComponent>
