@@ -17,12 +17,12 @@ const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
   };
 
   return (
-    <section className="nav-items">
-      <Link to="/" className="link-logo">
-        <img className="size-[30px]" src="/assets/icons/logo.svg" alt="logo" />
+    <section className='nav-items'>
+      <Link to='/' className='link-logo'>
+        <img className='size-[30px]' src='/assets/icons/logo.svg' alt='logo' />
         <h1>Tourismo</h1>
       </Link>
-      <div className="container">
+      <div className='container'>
         <nav>
           {sidebarItems.map(({ id, href, icon, label }) => (
             <NavLink key={id} to={href}>
@@ -46,22 +46,22 @@ const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
             </NavLink>
           ))}
         </nav>
-        <footer className="nav-footer">
+        <footer className='nav-footer'>
           <img
             src={user?.imageUrl || "/assets/images/david.webp"}
             alt={user?.name || "User"}
-            loading="lazy"
-            referrerPolicy="no-referrer"
+            loading='lazy'
+            referrerPolicy='no-referrer'
           />
           <article>
             <h2>{user?.name || "User"}</h2>
             <p>{user?.email || "user@example.com"}</p>
           </article>
-          <button onClick={handleLogout} className="cursor-pointer">
+          <button onClick={handleLogout} className='cursor-pointer'>
             <img
-              src="/assets/icons/logout.svg"
-              alt="Logout"
-              className="size-6"
+              src='/assets/icons/logout.svg'
+              alt='Logout'
+              className='size-6'
             />
           </button>
         </footer>

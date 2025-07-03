@@ -15,6 +15,7 @@ import {
   ColumnSeries,
   DataLabel,
   Inject,
+  Legend,
   load,
   Series,
   SeriesCollectionDirective,
@@ -90,13 +91,7 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
     usersJoined,
   } = loaderData.dashboardStats;
   const user = loaderData.user as User | null;
-  const {
-    allTrips,
-    tripsCreatedData,
-    tripsByTravelStyle,
-    allUsers,
-    userGrowth,
-  } = loaderData;
+  const { allTrips, tripsByTravelStyle, allUsers, userGrowth } = loaderData;
 
   const trips = allTrips.map((trip) => ({
     imageUrl: trip.imageUrls[0],
@@ -192,6 +187,7 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
               Category,
               DataLabel,
               Tooltip,
+              Legend,
             ]}
           />
           <SeriesCollectionDirective>
@@ -199,16 +195,25 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
               dataSource={userGrowth}
               xName='day'
               yName='count'
-              name='Column'
               type='Column'
+              name='Users'
               columnWidth={0.3}
               cornerRadius={{ topLeft: 10, topRight: 10 }}
               marker={{ visible: true, width: 10, height: 10 }}
             />
+            <SeriesDirective
+              dataSource={userGrowth}
+              xName='day'
+              yName='count'
+              type='SplineArea'
+              name='Wave'
+              fill='rgba(135, 206, 235, 0.5)'
+              border={{ width: 2, color: "#55a8c9" }}
+            />
           </SeriesCollectionDirective>
         </ChartComponent>
         <ChartComponent
-          id='chart-2'
+          id='trip-trend-chart'
           primaryXAxis={tripXAxis}
           primaryYAxis={tripYAxis}
           title='Trip Trends'
@@ -221,57 +226,58 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
               Category,
               DataLabel,
               Tooltip,
+              Legend,
             ]}
           />
-
           <SeriesCollectionDirective>
             <SeriesDirective
               dataSource={tripsByTravelStyle}
               xName='travelStyle'
               yName='count'
               type='Column'
-              name='day'
+              name='Trips'
               columnWidth={0.3}
               cornerRadius={{ topLeft: 10, topRight: 10 }}
             />
           </SeriesCollectionDirective>
         </ChartComponent>
       </section>
-      <section className='user-trip wrapper-sm'>
-        {usersAndTrips.map(({ title, dataSource, field, headerText }, i) => (
-          <div key={i} className='flex flex-col gap-5'>
-            <h3 className='p-20-semibold text-dark-100'>{title}</h3>
-
-            <GridComponent dataSource={dataSource} gridLines='None'>
-              <ColumnsDirective>
-                <ColumnDirective
-                  field='name'
-                  headerText='Name'
-                  width='200'
-                  textAlign='Left'
-                  template={(props: UserData) => (
-                    <div className='flex items-center gap-1.5 px-4'>
-                      <img
-                        src={props.imageUrl}
-                        alt='user'
-                        className='rounded-full size-8 aspect-square'
-                        referrerPolicy='no-referrer'
-                      />
-                      <span>{props.name}</span>
-                    </div>
-                  )}
-                />
-
-                <ColumnDirective
-                  field={field}
-                  headerText={headerText}
-                  width='150'
-                  textAlign='Left'
-                />
-              </ColumnsDirective>
-            </GridComponent>
-          </div>
-        ))}
+      <section className='user-trip wrapper'>
+        {usersAndTrips.map(
+          ({ title, dataSource, field, headerText }, index) => (
+            <div key={index} className='flex flex-col gap-5'>
+              <h3 className='p-20-semibold text-dark-100'>{title}</h3>
+              <GridComponent dataSource={dataSource} gridLines='None'>
+                <ColumnsDirective>
+                  <ColumnDirective
+                    field={field}
+                    headerText={headerText}
+                    width='200'
+                    textAlign='Left'
+                    template={(props: UserData) => (
+                      <div className='flex items-center gap-1.5 px-4'>
+                        <img
+                          src={props.imageUrl}
+                          alt={props.name}
+                          className='size-8 rounded-full aspect-square'
+                          referrerPolicy='no-referrer'
+                          loading='lazy'
+                        />
+                        <span>{props.name}</span>
+                      </div>
+                    )}
+                  />
+                  <ColumnDirective
+                    field={field}
+                    headerText={headerText}
+                    width='150'
+                    textAlign='Left'
+                  />
+                </ColumnsDirective>
+              </GridComponent>
+            </div>
+          )
+        )}
       </section>
     </main>
   );
